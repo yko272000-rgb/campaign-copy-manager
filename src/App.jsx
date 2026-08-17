@@ -19,7 +19,8 @@ const initialForm = {
   whatsappContact: '',
   offer: '',
   dialect: 'Kuwaiti',
-  tone: 'Friendly',
+  tone: 'Friendly & Casual',
+  coveragePoints: '',
   content: {},
   updatedAt: '',
 }
@@ -32,8 +33,92 @@ const copyTypes = [
   ['notification', 'App Notification'],
 ]
 
+const dialects = ['Kuwaiti', 'Saudi', 'Emirati', 'Qatari', 'Omani', 'Bahraini']
+const tones = ['Friendly & Casual', 'Classy & Premium', 'Fun & Energetic', 'Warm & Personal', 'Professional & Polished']
+
+const dialectCopy = {
+  Kuwaiti: {
+    inviteOpen: 'هلا والله! حابين نعزمج',
+    inviteBody: 'على تجربة',
+    inviteClose: 'ونحب نشوف تغطيتج بأسلوبج الطبيعي والعفوي ✨',
+    reminderOpen: 'هلا! حبيت أذكّرج',
+    reminderClose: 'وناطرين تغطيتج الحلوة ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، بلغينا بـ',
+    briefIntro: 'نقاط التركيز بالتغطية:',
+    notificationTitle: 'فرصتج مع',
+    notificationLead: 'تجربة حلوة ناطرتج ✨',
+  },
+  Saudi: {
+    inviteOpen: 'هلا! يسعدنا ندعوك',
+    inviteBody: 'لتجربة',
+    inviteClose: 'ونحب تكون تغطيتك عفوية وبأسلوبك الخاص ✨',
+    reminderOpen: 'هلا! حبيت أذكّرك',
+    reminderClose: 'ومتحمسين نشوف تغطيتك ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، أرسلينا',
+    briefIntro: 'نقاط التركيز بالتغطية:',
+    notificationTitle: 'فرصتك مع',
+    notificationLead: 'تجربة حلوة بانتظارك ✨',
+  },
+  Emirati: {
+    inviteOpen: 'هلا! يسعدنا نعزمج',
+    inviteBody: 'على تجربة',
+    inviteClose: 'ونحب نشوف التغطية بطريقتج وبأسلوبج العفوي ✨',
+    reminderOpen: 'هلا! حبيت أذكّرج',
+    reminderClose: 'ونتريا تغطيتج الحلوة ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، خبرينا بـ',
+    briefIntro: 'نقاط التركيز في التغطية:',
+    notificationTitle: 'فرصتج مع',
+    notificationLead: 'تجربة حلوة تنتظرج ✨',
+  },
+  Qatari: {
+    inviteOpen: 'هلا! يسعدنا ندعوج',
+    inviteBody: 'لتجربة',
+    inviteClose: 'ونحب نشوف تغطيتج بطريقتج العفوية والحلوة ✨',
+    reminderOpen: 'هلا! حبيت أذكّرج',
+    reminderClose: 'ومتحمسين نشوف تغطيتج ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، عطينا',
+    briefIntro: 'نقاط التركيز في التغطية:',
+    notificationTitle: 'فرصتج مع',
+    notificationLead: 'تجربة حلوة ناطرتج ✨',
+  },
+  Omani: {
+    inviteOpen: 'هلا! يسعدنا ندعوج',
+    inviteBody: 'لتجربة',
+    inviteClose: 'ونحب نشوف التغطية بأسلوبج الطبيعي والعفوي ✨',
+    reminderOpen: 'هلا! حبيت أذكّرج',
+    reminderClose: 'ونتريا نشوف تغطيتج ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، خبرينا بـ',
+    briefIntro: 'نقاط التركيز في التغطية:',
+    notificationTitle: 'فرصتج مع',
+    notificationLead: 'تجربة حلوة بانتظارج ✨',
+  },
+  Bahraini: {
+    inviteOpen: 'هلا! يسعدنا ندعوج',
+    inviteBody: 'لتجربة',
+    inviteClose: 'ونحب نشوف تغطيتج بطريقتج الطبيعية والعفوية ✨',
+    reminderOpen: 'هلا! حبيت أذكّرج',
+    reminderClose: 'ونتريا نشوف تغطيتج الحلوة ✨',
+    bloom: 'للتسجيل، سجلي عن طريق تطبيق Bloom.',
+    link: 'للتسجيل، احجزي من خلال الرابط:',
+    whatsapp: 'للتأكيد، خبرينا بـ',
+    briefIntro: 'نقاط التركيز في التغطية:',
+    notificationTitle: 'فرصتج مع',
+    notificationLead: 'تجربة حلوة ناطرتج ✨',
+  },
+}
+
 function hasMultipleBranches(location = '') {
-  return location.includes('\n') || location.includes(',') || location.includes('/') || location.includes(' / ')
+  return location.includes('\n') || location.includes(',') || location.includes('/')
 }
 
 function hasMultipleDates(form) {
@@ -55,46 +140,102 @@ function formatTime(form) {
   return form.time || ''
 }
 
+function buildSchedule(form) {
+  const dates = formatDates(form)
+  const time = formatTime(form)
+  const location = form.location.trim()
+  const parts = []
+
+  if (dates) parts.push(`التاريخ: ${dates}`)
+  if (time) parts.push(`الوقت: ${time}`)
+  if (location) parts.push(`الموقع: ${location}`)
+
+  return parts.join('\n')
+}
+
 function buildCta(form) {
+  const dialect = dialectCopy[form.dialect] || dialectCopy.Kuwaiti
+
   if (form.channel === 'Bloom App') {
-    return 'للتسجيل، سجلي عن طريق تطبيق Bloom.'
+    return dialect.bloom
   }
 
   if (form.channel === 'Booking Link') {
     return form.bookingLink
-      ? `للتسجيل، احجزي من خلال الرابط:\n${form.bookingLink}`
+      ? `${dialect.link}\n${form.bookingLink}`
       : 'للتسجيل، احجزي من خلال رابط الحجز.'
   }
 
-  const details = ['الوقت']
-  if (hasMultipleDates(form)) details.unshift('التاريخ')
+  const details = []
+  if (hasMultipleDates(form)) details.push('التاريخ')
+  if (form.timeFrom || form.timeTo || form.time) details.push('الوقت')
   if (hasMultipleBranches(form.location)) details.push('الفرع')
-  const contact = form.whatsappContact ? `\nواتساب: ${form.whatsappContact}` : ''
-  return `للتأكيد، بلغينا بـ${details.join(' و')}.${contact}`
+
+  if (!details.length) return 'للتأكيد، بلغينا بتفاصيل زيارتج.'
+
+  return `${dialect.whatsapp} ${details.join(' و')}.${form.whatsappContact ? `\nواتساب: ${form.whatsappContact}` : ''}`
+}
+
+function toneIntro(tone) {
+  switch (tone) {
+    case 'Classy & Premium':
+      return 'بأسلوب راقٍ وأنيق يعكس هوية البراند.'
+    case 'Fun & Energetic':
+      return 'بأسلوب حيوي ومرح يبين الحماس والتجربة.'
+    case 'Warm & Personal':
+      return 'بأسلوب دافئ وشخصي يخلي التجربة قريبة وطبيعية.'
+    case 'Professional & Polished':
+      return 'بأسلوب مرتب واحترافي مع الحفاظ على الطابع الطبيعي.'
+    default:
+      return 'بأسلوب عفوي، قريب، وطبيعي بدون ما يكون إعلاني.'
+  }
+}
+
+function cleanPoint(point) {
+  return point.replace(/^[-•*]\s*/, '').trim()
+}
+
+function getCoveragePoints(form) {
+  return form.coveragePoints
+    .split('\n')
+    .map(cleanPoint)
+    .filter(Boolean)
 }
 
 function generateCopy(form, kind) {
   const campaign = form.name || 'هذه الحملة'
-  const brand = form.brand || 'علامتنا'
-  const dates = formatDates(form)
-  const time = formatTime(form)
-  const details = form.offer ? `\n\nالعرض: ${form.offer}` : ''
-  const place = form.location ? `\nالموقع / الفروع: ${form.location}` : ''
-  const schedule = dates
-    ? `\nالتاريخ: ${dates}${time ? `\nالوقت: ${time}` : ''}`
-    : time
-      ? `\nالوقت: ${time}`
-      : ''
+  const brand = form.brand || 'البراند'
+  const dialect = dialectCopy[form.dialect] || dialectCopy.Kuwaiti
+  const schedule = buildSchedule(form)
   const cta = buildCta(form)
+  const points = getCoveragePoints(form)
 
-  const variants = {
-    invitation: `هلا! يسعدنا دعوتج للمشاركة في حملة «${campaign}» مع ${brand}.\n\nنحب نشوف تغطيتج بأسلوبج الطبيعي والعفوي، وتعكس تجربتج بكل حلاوة.${schedule}${place}${details}\n\n${cta}`,
-    brief: `بريف حملة «${campaign}» — ${brand}\n\nالمطلوب: مشاركة التجربة بأسلوب ${form.tone.toLowerCase()} وطبيعي، مع إبراز أهم تفاصيل التجربة بشكل واضح.${schedule}${place}${details}\n\nطريقة التسجيل: ${form.channel}\n${cta}`,
-    reminder: `هلا! تذكير لطيف بخصوص حملة «${campaign}» مع ${brand}.${schedule}${place}\n\nنتحمس نشوف محتواج الجميل!\n\n${cta}`,
-    notification: `فرصة جديدة مع ${brand}! ✨\nانضمي إلى حملة «${campaign}» واستمتعي بالتجربة.${schedule}${details}\n\n${cta}`,
+  if (kind === 'invitation') {
+    const tone = toneIntro(form.tone)
+    const offer = form.offer ? `\n\n🎁 ${form.offer}` : ''
+    return `${dialect.inviteOpen} للمشاركة في حملة «${campaign}» مع ${brand}.\n\n${dialect.inviteBody} ${campaign} ${tone}\n\n${schedule}${offer}\n\n${dialect.inviteClose}\n\n${cta}`
   }
 
-  return variants[kind]
+  if (kind === 'brief') {
+    if (!points.length) {
+      return `${dialect.briefIntro}\n\n• أضيفي هنا أهم النقاط اللي تبين التركيز عليها بالتغطية.\n• كل نقطة تكون واضحة ومباشرة.`
+    }
+
+    return `${dialect.briefIntro}\n\n${points.map(point => `• ${point}`).join('\n')}`
+  }
+
+  if (kind === 'reminder') {
+    const details = schedule ? `\n\n${schedule}` : ''
+    return `${dialect.reminderOpen} بخصوص حملة «${campaign}» مع ${brand}.${details}\n\n${dialect.reminderClose}\n\n${cta}`
+  }
+
+  if (kind === 'notification') {
+    const shortDetail = form.offer || campaign
+    const detail = shortDetail.length > 85 ? `${shortDetail.slice(0, 82)}...` : shortDetail
+    return `${dialect.notificationTitle} ${brand} ✨\n${dialect.notificationLead}\n${detail}`
+  }
+
+  return ''
 }
 
 function App() {
@@ -115,7 +256,11 @@ function App() {
   const setField = (key, value) => setForm(current => ({ ...current, [key]: value }))
   const setContent = (kind, value) => setForm(current => ({ ...current, content: { ...current.content, [kind]: value } }))
   const generate = kind => setContent(kind, generateCopy(form, kind))
-  const generateAll = () => copyTypes.forEach(([key]) => setContent(key, generateCopy(form, key)))
+  const generateAll = () => {
+    const nextContent = {}
+    copyTypes.forEach(([key]) => { nextContent[key] = generateCopy(form, key) })
+    setForm(current => ({ ...current, content: { ...current.content, ...nextContent } }))
+  }
 
   const save = () => {
     if (!form.name.trim() || !form.brand.trim()) {
@@ -132,7 +277,7 @@ function App() {
   }
 
   const newCampaign = () => {
-    setForm(initialForm)
+    setForm({ ...initialForm, content: {} })
     setView('new')
     setEditing(null)
   }
@@ -176,12 +321,12 @@ function App() {
         {view === 'new' ? (
           <>
             <header>
-              <div><p className="eyebrow">COPY WRITER BY ECHO</p><h1>{form.id ? 'Edit Campaign' : 'New Campaign'}</h1><p className="subtle">Build campaign details and generate ready-to-use influencer copy.</p></div>
+              <div><p className="eyebrow">COPY WRITER BY ECHO</p><h1>{form.id ? 'Edit Campaign' : 'New Campaign'}</h1><p className="subtle">Build campaign details, direction and ready-to-use influencer copy.</p></div>
               <button className="primary" onClick={save}>Save Campaign</button>
             </header>
 
             <section className="panel">
-              <div className="section-title"><div><span className="section-number">01</span><div><h2>Campaign details</h2><p>Tell us what the campaign is about.</p></div></div></div>
+              <div className="section-title"><div><span className="section-number">01</span><div><h2>Campaign details</h2><p>These are the details used in the invitation and reminder.</p></div></div></div>
               <div className="form-grid">
                 <Field label="Campaign Name" required value={form.name} onChange={v => setField('name', v)} placeholder="e.g. Summer Launch" />
                 <Field label="Brand Name" required value={form.brand} onChange={v => setField('brand', v)} placeholder="Brand name" />
@@ -204,22 +349,26 @@ function App() {
             </section>
 
             <section className="panel">
-              <div className="section-title"><div><span className="section-number">02</span><div><h2>Registration & offer</h2><p>The closing line automatically matches the selected method.</p></div></div></div>
+              <div className="section-title"><div><span className="section-number">02</span><div><h2>Registration & offer</h2><p>The invitation closing line changes automatically by registration method.</p></div></div></div>
               <div className="form-grid">
                 <Select label="Registration Method" value={form.channel} onChange={v => setField('channel', v)} options={['Bloom App', 'Booking Link', 'WhatsApp']} />
                 {form.channel === 'Booking Link' && <Field label="Booking Link" type="url" value={form.bookingLink} onChange={v => setField('bookingLink', v)} placeholder="https://..." />}
                 {form.channel === 'WhatsApp' && <Field label="WhatsApp Contact" value={form.whatsappContact} onChange={v => setField('whatsappContact', v)} placeholder="+965 ..." />}
-                <label className="field full"><span>Gift / Offer</span><textarea value={form.offer} onChange={e => setField('offer', e.target.value)} placeholder="Enter the full gift or offer details..." rows="4" /></label>
+                <label className="field full"><span>Gift / Offer</span><textarea value={form.offer} onChange={e => setField('offer', e.target.value)} placeholder="Enter the gift or offer details..." rows="4" /></label>
               </div>
             </section>
 
             <section className="panel">
-              <div className="section-title"><div><span className="section-number">03</span><div><h2>Copy direction</h2><p>Choose the language style and personality.</p></div></div></div>
-              <div className="form-grid"><Select label="Dialect" value={form.dialect} onChange={v => setField('dialect', v)} options={['Kuwaiti', 'Saudi', 'Emirati', 'Qatari', 'Omani', 'Bahraini']} /><Select label="Tone" value={form.tone} onChange={v => setField('tone', v)} options={['Casual', 'Friendly', 'Classy', 'Premium', 'Exciting', 'Professional']} /></div>
+              <div className="section-title"><div><span className="section-number">03</span><div><h2>Copy direction</h2><p>Dialect changes the wording. Tone controls the invitation personality.</p></div></div></div>
+              <div className="form-grid">
+                <Select label="Dialect" value={form.dialect} onChange={v => setField('dialect', v)} options={dialects} />
+                <Select label="Invitation Tone" value={form.tone} onChange={v => setField('tone', v)} options={tones} />
+                <label className="field full"><span>Main Coverage Points <b>*</b></span><textarea value={form.coveragePoints} onChange={e => setField('coveragePoints', e.target.value)} placeholder={'Write only the main points you want the influencer to focus on in the coverage.\nExample:\nShow the new summer collection\nMention the special launch offer\nHighlight the store experience'} rows="7" /><small className="field-hint">The brief is sent after the influencer confirms. It will contain these points only, not the campaign invitation details.</small></label>
+              </div>
             </section>
 
             <section className="content-head">
-              <div><p className="eyebrow">CONTENT GENERATION</p><h2>Campaign copy</h2><p className="subtle">Four formats, one consistent campaign message.</p></div>
+              <div><p className="eyebrow">CONTENT GENERATION</p><h2>Campaign copy</h2><p className="subtle">Each format follows its own purpose: invitation, coverage brief, reminder, and short app notification.</p></div>
               <div className="generator-actions">{copyTypes.map(([key, label]) => <button key={key} onClick={() => generate(key)}>{label}</button>)}<button className="primary" onClick={generateAll}>Generate All</button></div>
             </section>
 
@@ -248,7 +397,7 @@ function Select({ label, value, onChange, options }) {
 }
 
 function ContentCard({ title, text, editing, onEdit, onChange, onCopy, onRegenerate }) {
-  return <article className="copy-card"><div className="card-head"><h3>{title}</h3><span className={text ? 'ready' : 'draft'}>{text ? 'Ready' : 'Draft'}</span></div>{editing ? <textarea className="copy-editor" dir="rtl" value={text} onChange={e => onChange(e.target.value)} rows="9" /> : <p className={text ? 'arabic-copy' : 'placeholder'} dir={text ? 'rtl' : 'ltr'}>{text || 'Generate copy to preview it here.'}</p>}<div className="card-actions"><button onClick={onEdit}>{editing ? 'Done' : 'Edit'}</button><button onClick={onCopy} disabled={!text}>Copy</button><button onClick={onRegenerate}>Regenerate</button></div></article>
+  return <article className="copy-card"><div className="card-head"><h3>{title}</h3><span className={text ? 'ready' : 'draft'}>{text ? 'Ready' : 'Draft'}</span></div>{editing ? <textarea className="copy-editor" dir="rtl" value={text} onChange={e => onChange(e.target.value)} rows="10" /> : <p className={text ? 'arabic-copy' : 'placeholder'} dir={text ? 'rtl' : 'ltr'}>{text || 'Generate copy to preview it here.'}</p>}<div className="card-actions"><button onClick={onEdit}>{editing ? 'Done' : 'Edit'}</button><button onClick={onCopy} disabled={!text}>Copy</button><button onClick={onRegenerate}>Regenerate</button></div></article>
 }
 
 export default App
