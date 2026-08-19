@@ -12,7 +12,7 @@ const model = process.env.OPENAI_MODEL || 'gpt-5.6-luna'
 app.use(express.json({ limit: '100kb' }))
 
 async function loadSkill() {
-  return fs.readFile(path.join(__dirname, 'src', 'ai', 'echo-copywriting-skill.md'), 'utf8')
+  return fs.readFile(path.join(__dirname, 'skill', 'echo-copywriting-skill.md'), 'utf8')
 }
 
 function buildInput(campaign, kind, skill) {
@@ -22,7 +22,7 @@ function buildInput(campaign, kind, skill) {
   delete safeCampaign.updatedAt
   delete safeCampaign.name
 
-  return `${skill}\n\n## Current campaign data\nTreat these fields as confirmed facts. The internal campaign name has already been removed and must never be reconstructed.\n\n${JSON.stringify(safeCampaign, null, 2)}\n\n## Requested format\n${kind}\n\nReturn ONLY valid JSON with exactly this shape: {"copy":"..."}. No markdown fences, no explanation, no extra keys.\n\nFor an Influencer Brief, use the main coverage points as strategic inputs and add practical execution ideas. Do not merely paraphrase them. For an Invitation, create a real hook as the first line and do not begin with a greeting. For an App Notification, keep the copy extremely short. Preserve every factual detail exactly and never invent missing information.`
+  return `${skill}\n\n## Current campaign data\nTreat these fields as confirmed facts. The internal campaign name has already been removed and must never be reconstructed.\n\n${JSON.stringify(safeCampaign, null, 2)}\n\n## Requested output type\n${kind}\n\nReturn ONLY valid JSON with exactly this shape: {"copy":"..."}. No markdown fences, no explanation, no extra keys.\n\nFinal checks before answering: the internal campaign name must not appear; an Invitation must have a campaign-specific hook and must not start with a generic greeting; a Brief must turn coverage points into practical execution ideas instead of copying them; a Notification must be extremely short; Visit/Event/Store Visit times must use the From–To window when provided; CTA wording must match Bloom App, Booking Link, or WhatsApp; multiple dates/branches must trigger confirmation wording where appropriate; dialect and audience rules must be respected.`
 }
 
 app.post('/api/generate', async (req, res) => {
@@ -35,15 +35,29 @@ app.post('/api/generate', async (req, res) => {
     const skill = await loadSkill()
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
-      body: JSON.stringify({ model, input: buildInput(campaign, kind, skill) }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model,
+        input: buildInput(campaign, kind, skill),
+        store: false,
+      }),
     })
+
     const data = await response.json()
     if (!response.ok) return res.status(response.status).json({ error: data?.error?.message || 'OpenAI request failed.' })
 
     const raw = data.output_text || ''
     let parsed
-    try { parsed = JSON.parse(raw) } catch { const match = raw.match(/\{[\s\S]*\}/); if (match) parsed = JSON.parse(match[0]) }
+    try {
+      parsed = JSON.parse(raw)
+    } catch {
+      const match = raw.match(/\{[\s\S]*\}/)
+      if (match) parsed = JSON.parse(match[0])
+    }
+
     if (!parsed?.copy) return res.status(502).json({ error: 'The AI returned an invalid copy response.' })
     res.json({ copy: parsed.copy, model })
   } catch (error) {
